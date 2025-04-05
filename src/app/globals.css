@@ -125,6 +125,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 선택 영역 스타일 제거 및 사용자 선택 비활성화 */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* SQL 에디터 내부는 선택 가능하도록 설정 */
+.monaco-editor {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* 테이블 셀 내부도 선택 가능하도록 설정 */
+.table td {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -197,3 +221,12 @@
     @apply bg-background text-foreground;
   }
 }
+/* 선택 영역 스타일 제거 */
+::selection {
+  background: transparent;
+}
+
+::-moz-selection {
+  background: transparent;
+}
+

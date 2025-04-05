@@ -1,11 +1,23 @@
+import { Redis } from 'ioredis';
 import { Pool } from 'pg';
 import { queries } from './sql/queries';
 
 const DEFAULT_DAILY_LIMIT = 10000; // 기본 일일 최대 요청 토큰 사용량
 
+let redisClient: Redis | null = null;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
+
+export async function getRedisClient(): Promise<Redis> {
+  if (!redisClient) {
+    redisClient = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+    redisClient.on('error', (error) => {
+      console.error('Redis Client Error', error);
+    });
+  }
+  return redisClient;
+}
 
 export async function checkTokenUsage(userId: string): Promise<{ canUse: boolean; currentUsage: number; remaining: number }> {
   const today = new Date().toISOString().split('T')[0].replace(/-/g, '');
@@ -67,5 +79,17 @@ export async function incrementTokenUsage(userId: string, requestTokens: number,
   } catch (error) {
     console.error('Error updating token usage:', error);
     throw error;
+  }
+}
+
+export async function testRedisConnection(): Promise<boolean> {
+  try {
+    const redis = await getRedisClient();
+    await redis.ping();
+    console.log('[Redis 연결 테스트] 성공');
+    return true;
+  } catch (error) {
+    console.error('[Redis 연결 테스트] 실패:', error);
+    return false;
   }
 } 

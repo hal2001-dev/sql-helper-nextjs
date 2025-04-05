@@ -46,3 +46,8 @@ next-env.d.ts
 
 # documentation
 /document
+
+# Cursor
+.cursor/
+.cursor-cache/
+.cursor-log/

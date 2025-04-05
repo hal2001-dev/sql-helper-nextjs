@@ -6,7 +6,14 @@ declare module 'next-auth' {
       id: string;
       email?: string | null;
       name?: string | null;
-    }
+    };
+    jti?: string;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    jti?: string;
   }
 }
 
